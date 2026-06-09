@@ -1,9 +1,8 @@
-import random
-
-import psycopg2
-import requests
-import simplejson as json
-from confluent_kafka import SerializingProducer
+import random  # Random data generation ke liye (voter assignment aur fake data)
+import psycopg2  # PostgreSQL database connection ke liye (tables create aur data insert)
+import requests  # API calls ke liye (randomuser.me se fake data fetch karne ke liye)
+import simplejson as json  # JSON serialization/deserialization ke liye (Kafka messages)
+from confluent_kafka import SerializingProducer  # Kafka ko data send karne ke liye (producer)
 
 BASE_URL = 'https://randomuser.me/api/?nat=gb'
 PARTIES = ["Management Party", "Savior Party", "Tech Republic Party"]
@@ -11,7 +10,7 @@ random.seed(42)
 
 
 def generate_voter_data():
-    response = requests.get(BASE_URL)
+    response = requests.get(BASE_URL) # API call fake data ke liye
     if response.status_code == 200:
         user_data = response.json()['results'][0]
         return {
@@ -113,7 +112,7 @@ def create_tables(conn, cur):
     conn.commit()
 
 
-def insert_voters(conn, cur, voter)
+def insert_voters(conn, cur, voter):
     cur.execute("""
                         INSERT INTO voters (voter_id, voter_name, date_of_birth, gender, nationality, registration_number, address_street, address_city, address_state, address_country, address_postcode, email, phone_number, cell_number, picture, registered_age)
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s,%s,%s,%s,%s,%s)

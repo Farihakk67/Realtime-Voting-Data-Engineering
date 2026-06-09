@@ -1,16 +1,17 @@
-import random
-import time
-from datetime import datetime
+import random  # Random selection ke liye (candidate select karne ke liye)
+import time  # Time delay ke liye (processing speed control)
+from datetime import datetime  # Current timestamp ke liye (voting time record)
 
-import psycopg2
-import simplejson as json
-from confluent_kafka import Consumer, KafkaException, KafkaError, SerializingProducer
+import psycopg2  # PostgreSQL database connect karne ke liye
+import simplejson as json  # JSON data parse aur serialize karne ke liye
+from confluent_kafka import Consumer, KafkaException, KafkaError, SerializingProducer  # Kafka se data lene aur bhejne ke liye
 
-from main import delivery_report
+from main import delivery_report  # Delivery confirmation ke liye (Kafka messages ki status)
 
 conf = {
     'bootstrap.servers': 'localhost:9092',
 }
+
 
 consumer = Consumer(conf | {
     'group.id': 'voting-group',
@@ -46,7 +47,8 @@ def consume_messages():
 
 
 if __name__ == "__main__":
-    conn = psycopg2.connect("host=localhost dbname=voting user=postgres password=postgres")
+    conn = psycopg2.connect("host=localhost dbname=voting user=postgres password=postgres")  # <-- change here
+
     cur = conn.cursor()
 
     # candidates
@@ -99,6 +101,7 @@ if __name__ == "__main__":
                         on_delivery=delivery_report
                     )
                     producer.poll(0)
+                    
                 except Exception as e:
                     print("Error: {}".format(e))
                     # conn.rollback()

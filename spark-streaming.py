@@ -1,7 +1,7 @@
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import from_json, col
-from pyspark.sql.functions import sum as _sum
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, TimestampType
+from pyspark.sql import SparkSession  # Spark session start karne ke liye (main entry point)
+from pyspark.sql.functions import from_json, col  # JSON parse aur column select karne ke liye
+from pyspark.sql.functions import sum as _sum  # Data sum/aggregation karne ke liye (votes count)
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, TimestampType  # Data schema define karne ke liye (data types set)
 
 # import pyspark
 #
@@ -14,8 +14,7 @@ if __name__ == "__main__":
              .master("local[*]")  # Use local Spark execution with all available cores
              .config("spark.jars.packages",
                      "org.apache.spark:spark-sql-kafka-0-10_2.13:3.5.0")  # Spark-Kafka integration
-             .config("spark.jars",
-                     "/Users/airscholar/Dev/Projects/Python/Voting/postgresql-42.7.1.jar")  # PostgreSQL driver
+             #.config("spark.jars","/Users/airscholar/Dev/Projects/Python/Voting/postgresql-42.7.1.jar")  # PostgreSQL driver
              .config("spark.sql.adaptive.enabled", "false")  # Disable adaptive query execution
              .getOrCreate())
 
@@ -76,7 +75,7 @@ if __name__ == "__main__":
         .format("kafka") \
         .option("kafka.bootstrap.servers", "localhost:9092") \
         .option("topic", "aggregated_votes_per_candidate") \
-        .option("checkpointLocation", "/Users/airscholar/Dev/Projects/Python/Voting/checkpoints/checkpoint1") \
+        .option("checkpointLocation", "C:/tmp/checkpoint1") \
         .outputMode("update") \
         .start()
 
@@ -85,7 +84,7 @@ if __name__ == "__main__":
         .format("kafka") \
         .option("kafka.bootstrap.servers", "localhost:9092") \
         .option("topic", "aggregated_turnout_by_location") \
-        .option("checkpointLocation", "/Users/airscholar/Dev/Projects/Python/Voting/checkpoints/checkpoint2") \
+        .option("checkpointLocation", "C:/tmp/checkpoint2") \
         .outputMode("update") \
         .start()
 
